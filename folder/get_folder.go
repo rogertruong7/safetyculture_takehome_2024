@@ -2,10 +2,12 @@ package folder
 
 import (
 	"fmt"
-	"regexp"
+	"os"
+	"strings"
 
 	"github.com/gofrs/uuid"
 )
+
 func GetAllFolders() []Folder {
 	return GetSampleData()
 }
@@ -25,27 +27,26 @@ func (f *driver) GetFoldersByOrgID(orgID uuid.UUID) []Folder {
 }
 
 func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) []Folder {
-	// Your code here...
-	folders := f.folders
-	pattern := fmt.Sprintf(`^%s.`, name)
 	res := []Folder{}
-
-	parentFolderPattern, err := regexp.Compile(pattern)
-	if err != nil {
-		fmt.Println("Error compiling regex: ", err)
+	if orgID == uuid.Nil {
+		fmt.Fprintln(os.Stderr, "Invalid orgID provided")
 		return res
 	}
-
-	count := 0
+	if name == "" || strings.Contains(name, ".") {
+		fmt.Fprintln(os.Stderr, "Invalid folder name provided")
+		return res 
+	}
+	folders := f.folders
+	pattern := fmt.Sprintf(`%s.`, name)
 
 	for _, f := range folders {
-		if f.OrgId == orgID && parentFolderPattern.MatchString(f.Paths) {
-			fmt.Println("hello " + f.Paths)
-			fmt.Println(parentFolderPattern)
+		if f.Paths == "" {
+			fmt.Fprintln(os.Stderr, "Skipping folder with empty path")
+			continue
+		}
+		if f.OrgId == orgID && strings.Contains(f.Paths, pattern) {
 			res = append(res, f)
-			count++
 		}
 	}
-	fmt.Println(count)
 	return res
 }
