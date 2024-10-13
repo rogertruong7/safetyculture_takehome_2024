@@ -104,7 +104,7 @@ func Test_folder_GetAllChildFolders(t *testing.T) {
 			want: nil,
 		},
 		{
-			name: "First orgId, creative-scalphunter belongs to different orgid",
+			name: "First orgId, Folder does not exist in the specified organization",
 			orgID: orgID,
 			folderName: "creative-scalphunter",
 			folders: res,
