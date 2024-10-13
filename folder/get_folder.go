@@ -27,6 +27,7 @@ func (f *driver) GetFoldersByOrgID(orgID uuid.UUID) []Folder {
 }
 
 func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) []Folder {
+	// Checking if orgID and name is valid
 	if orgID == uuid.Nil {
 		fmt.Fprintln(os.Stderr, "Error: Invalid orgID provided")
 		return nil
@@ -36,6 +37,7 @@ func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) []Folder {
 		return nil
 	}
 
+	// Checking if the folder exists/OrgId is correct
 	folders := f.folders
 	folderExists := false
 	folderOrgId := uuid.Nil
@@ -53,7 +55,8 @@ func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) []Folder {
 		fmt.Fprintln(os.Stderr, "Error: Folder does not exist in the specified organization")
 		return nil
 	}
-	
+
+	// Appending child folders to res
 	res := []Folder{}
 	orgIDFolders := f.GetFoldersByOrgID(orgID)
 	pattern := fmt.Sprintf(`%s.`, name)

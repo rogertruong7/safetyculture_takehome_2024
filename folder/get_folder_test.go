@@ -73,8 +73,6 @@ func Test_folder_GetAllChildFolders(t *testing.T) {
 		folders []folder.Folder
 		want    []folder.Folder
 	}{
-		// TODO: your tests here
-
 		{
 			name: "Invalid orgID - no results",
 			orgID: fakeOrgId,
