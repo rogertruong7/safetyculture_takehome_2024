@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/georgechieng-sc/interns-2022/folder"
 	"github.com/gofrs/uuid"
 )
@@ -15,9 +13,10 @@ func main() {
 	// example usage
 	folderDriver := folder.NewDriver(res)
 	// orgFolder := folderDriver.GetFoldersByOrgID(orgID)
-	childrenFolder := folderDriver.GetAllChildFolders(orgID, "noble-vixen");
+	
 	// folder.PrettyPrint(res)
+	childrenFolder := folderDriver.GetAllChildFolders(orgID, "fast-watchmen");
 	folder.PrettyPrint(childrenFolder)
-	fmt.Printf("\n Folders for orgID: %s", orgID)
+	// fmt.Printf("\n Folders for orgID: %s", orgID)
 	// folder.PrettyPrint(orgFolder)
 }

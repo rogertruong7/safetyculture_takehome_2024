@@ -29,22 +29,39 @@ func (f *driver) GetFoldersByOrgID(orgID uuid.UUID) []Folder {
 func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) []Folder {
 	res := []Folder{}
 	if orgID == uuid.Nil {
-		fmt.Fprintln(os.Stderr, "Invalid orgID provided")
-		return res
+		fmt.Fprintln(os.Stderr, "Error: Invalid orgID provided")
+		return nil
 	}
 	if name == "" || strings.Contains(name, ".") {
-		fmt.Fprintln(os.Stderr, "Invalid folder name provided")
-		return res 
+		fmt.Fprintln(os.Stderr, "Error: Invalid folder name provided")
+		return nil
 	}
-	folders := f.folders
-	pattern := fmt.Sprintf(`%s.`, name)
 
+	folders := f.folders
+	folderExists := false
+	folderOrgId := uuid.Nil
 	for _, f := range folders {
+		if f.Name == name {
+			folderExists = true
+			folderOrgId = f.OrgId
+			break
+		}
+	}
+	if !folderExists {
+		fmt.Fprintln(os.Stderr, "Error: Folder does not exist")
+		return nil
+	} else if folderOrgId != orgID {
+		fmt.Fprintln(os.Stderr, "Error: Folder does not exist in the specified organization")
+		return nil
+	}
+
+	orgIDFolders := f.GetFoldersByOrgID(orgID)
+	pattern := fmt.Sprintf(`%s.`, name)
+	for _, f := range orgIDFolders {
 		if f.Paths == "" {
-			fmt.Fprintln(os.Stderr, "Skipping folder with empty path")
 			continue
 		}
-		if f.OrgId == orgID && strings.Contains(f.Paths, pattern) {
+		if strings.Contains(f.Paths, pattern) {
 			res = append(res, f)
 		}
 	}

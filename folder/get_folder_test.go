@@ -13,13 +13,13 @@ import (
 	"github.com/gofrs/uuid"
 	"github.com/stretchr/testify/assert"
 )
-const DefaultWrongOrgID = "38b9879b-f73b-4b0e-b9d9-4fc4c23643a7"
+const DefaultSecondOrgID = "38b9879b-f73b-4b0e-b9d9-4fc4c23643a7"
 // feel free to change how the unit test is structured
 func Test_folder_GetFoldersByOrgID(t *testing.T) {
 	t.Parallel()
 	
 	orgID := uuid.FromStringOrNil(folder.DefaultOrgID)
-	secondOrgId := uuid.FromStringOrNil(DefaultWrongOrgID)
+	secondOrgId := uuid.FromStringOrNil(DefaultSecondOrgID)
 	fakeOrgId := uuid.FromStringOrNil("doesntexist")
 	res := folder.GetAllFolders()
 
@@ -53,7 +53,7 @@ func Test_folder_GetFoldersByOrgID(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			f := folder.NewDriver(tt.folders)
 			get := f.GetFoldersByOrgID(tt.orgID)
-			assert.Equal(t, tt.want, get)
+			assert.ElementsMatch(t, tt.want, get)
 		})
 	}
 }
@@ -62,7 +62,7 @@ func Test_folder_GetAllChildFolders(t *testing.T) {
 	t.Parallel()
 
 	orgID := uuid.FromStringOrNil(folder.DefaultOrgID)
-	secondOrgId := uuid.FromStringOrNil(DefaultWrongOrgID)
+	secondOrgId := uuid.FromStringOrNil(DefaultSecondOrgID)
 	fakeOrgId := uuid.FromStringOrNil("doesntexist")
 	res := folder.GetAllFolders()
 
@@ -74,31 +74,69 @@ func Test_folder_GetAllChildFolders(t *testing.T) {
 		want    []folder.Folder
 	}{
 		// TODO: your tests here
-		// invalid org id
-		// invalid path
-		// creative-scalphunter, wrong orgid
-		// close-layla-miller wrong orgid
-		// noble-vixen, doesnt contain just noble-vixen
-		// nearby-secret
-		// stunning-horridus
+
 		{
 			name: "Invalid orgID - no results",
 			orgID: fakeOrgId,
 			folderName: "stunning-horridus",
 			folders: res,
-			want: []folder.Folder{},
+			want: nil,
 		},
 		{
-			name: "Get folders for first OrgID",
+			name: "Invalid folder name - no results",
 			orgID: orgID,
+			folderName: "noble-vixen.",
 			folders: res,
-			want: extractData("./testOutputs/getFirstOrgID.json"),
+			want: nil,
 		},
 		{
-			name: "Get folders for second OrgID",
-			orgID: secondOrgId,
+			name: "Invalid folder name 2 folders - no results",
+			orgID: orgID,
+			folderName: "noble-vixen.nearby-secret",
 			folders: res,
-			want: extractData("./testOutputs/getSecondOrgID.json"),
+			want: nil,
+		},
+		{
+			name: "Empty folder name - no results",
+			orgID: orgID,
+			folderName: "",
+			folders: res,
+			want: nil,
+		},
+		{
+			name: "First orgId, creative-scalphunter belongs to different orgid",
+			orgID: orgID,
+			folderName: "creative-scalphunter",
+			folders: res,
+			want: nil,
+		},
+		{
+			name: "First orgId, folder doesn't exist at all",
+			orgID: orgID,
+			folderName: "hellohellohello",
+			folders: res,
+			want: nil,
+		},
+		{
+			name: "Second orgId, creative-scalphunter does belong",
+			orgID: secondOrgId,
+			folderName: "creative-scalphunter",
+			folders: res,
+			want: extractData("./testOutputs/getChildrenWorking.json"),
+		},
+		{
+			name: "Second orgId, topical-micromax not first folder does belong",
+			orgID: secondOrgId,
+			folderName: "topical-micromax",
+			folders: res,
+			want: extractData("./testOutputs/getChildrenOfChild.json"),
+		},
+		{
+			name: "Second orgId, file has no children, equal-wonder-woman",
+			orgID: secondOrgId,
+			folderName: "equal-wonder-woman",
+			folders: res,
+			want: []folder.Folder{},
 		},
 
 	}
@@ -106,7 +144,7 @@ func Test_folder_GetAllChildFolders(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			f := folder.NewDriver(tt.folders)
 			get := f.GetAllChildFolders(tt.orgID, tt.folderName)
-			assert.Equal(t, tt.want, get)
+			assert.ElementsMatch(t, tt.want, get)
 		})
 	}
 }
