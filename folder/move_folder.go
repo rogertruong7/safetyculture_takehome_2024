@@ -9,11 +9,6 @@ import (
 
 
 func (f *driver) MoveFolder(name string, dst string) ([]Folder, error) {
-	
-	// Error: Cannot move a folder to a child of itself
-	// assume that there cannot be two folders with the same name, because according
-	// to example, the dst string is just a folder name, with no path
-	
 	// By the spec there cannot be two folders with the same name because we do not specify the path of the folder
 	if (name == dst) {
 		return nil, fmt.Errorf("error: cannot move a folder to itself")
@@ -22,11 +17,9 @@ func (f *driver) MoveFolder(name string, dst string) ([]Folder, error) {
 	sourceExists := false
 	sourcePath := ""
 	sourceOrgId := uuid.Nil
-
 	dstExists := false
 	dstPath := ""
 	dstOrgId := uuid.Nil
-
 	folders := f.folders
 	for _, f := range folders {
 		if f.Name == name {
@@ -61,7 +54,7 @@ func (f *driver) MoveFolder(name string, dst string) ([]Folder, error) {
 
 	if dstIndex != -1 {
 		if (sourceIndex < dstIndex) {
-			return nil, fmt.Errorf("error: cannot move a folder to a child of itselfn")
+			return nil, fmt.Errorf("error: cannot move a folder to a child of itself")
 		}
 	}
 
@@ -79,10 +72,10 @@ func (f *driver) MoveFolder(name string, dst string) ([]Folder, error) {
 			}
 			if nameIndex == -1 {
 				// We know that source folder does exist from above. This ensures that we are not finding a path that just contains the name of the folder e.g. we want abc, but abcd also contains abc
+				res = append(res, f)
 				continue
 			}
 			combinedString := strings.Join(parts[nameIndex:], ".")
-			fmt.Println(combinedString)
             newFolder := Folder{
 				Name: f.Name,
 				OrgId: f.OrgId,
