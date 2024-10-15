@@ -116,7 +116,7 @@ func Test_folder_GetAllChildFolders(t *testing.T) {
 			want: nil,
 		},
 		{
-			name: "Second orgId, creative-scalphunter does belong",
+			name: "Second orgId, creative-scalphunter does belong, first folder",
 			orgID: secondOrgId,
 			folderName: "creative-scalphunter",
 			folders: res,
@@ -128,6 +128,13 @@ func Test_folder_GetAllChildFolders(t *testing.T) {
 			folderName: "topical-micromax",
 			folders: res,
 			want: extractData("./testOutputs/getChildrenOfChild.json"),
+		},
+		{
+			name: "First orgId, afast-watchmen vs fast-watchmen",
+			orgID: orgID,
+			folderName: "fast-watchmen",
+			folders: res,
+			want: extractData("./testOutputs/afast-watchmen.json"),
 		},
 		{
 			name: "Second orgId, file has no children, equal-wonder-woman",

@@ -3,6 +3,7 @@ package folder
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/gofrs/uuid"
@@ -59,12 +60,17 @@ func (f *driver) GetAllChildFolders(orgID uuid.UUID, name string) []Folder {
 	// Appending child folders to res
 	res := []Folder{}
 	orgIDFolders := f.GetFoldersByOrgID(orgID)
-	pattern := fmt.Sprintf(`%s.`, name)
+	pattern := fmt.Sprintf(`^%s\.|\.%s\.`, name, name)
+	regex, err := regexp.Compile(pattern)
+    if err != nil {
+        fmt.Println("Error compiling regex:", err)
+        return nil
+    }
 	for _, f := range orgIDFolders {
 		if f.Paths == "" {
 			continue
 		}
-		if strings.Contains(f.Paths, pattern) {
+		if regex.MatchString(f.Paths) {
 			res = append(res, f)
 		}
 	}
