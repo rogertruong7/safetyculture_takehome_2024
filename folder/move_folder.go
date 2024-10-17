@@ -58,7 +58,6 @@ func (f *driver) MoveFolder(name string, dst string) ([]Folder, error) {
 
 	// Changing the path string
 	res := []Folder{}
-    dstPath = fmt.Sprintf(`%s.`, dstPath)
     for _, f := range folders { 
         if f.OrgId == sourceOrgId && strings.Contains(f.Paths, name) {
 			// this ensures that we are not finding a path that just contains the name of the folder
@@ -77,7 +76,7 @@ func (f *driver) MoveFolder(name string, dst string) ([]Folder, error) {
             res = append(res, Folder{
 					Name: f.Name,
 					OrgId: f.OrgId,
-					Paths: fmt.Sprintf(`%s%s`, dstPath, combinedString),
+					Paths: fmt.Sprintf(`%s.%s`, dstPath, combinedString),
 				})
         } else {
             res = append(res, f)

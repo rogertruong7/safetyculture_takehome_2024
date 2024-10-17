@@ -155,6 +155,16 @@
 		"paths": "noble-vixen.fast-watchmen"
 	},
 	{
+		"name": "afast-watchmen",
+		"org_id": "c1556e17-b7c0-45a3-a6ae-9546248fb17a",
+		"paths": "noble-vixen.afast-watchmen"
+	},
+	{
+		"name": "hello",
+		"org_id": "c1556e17-b7c0-45a3-a6ae-9546248fb17a",
+		"paths": "noble-vixen.afast-watchmen.hello"
+	},
+	{
 		"name": "full-weapon-x",
 		"org_id": "c1556e17-b7c0-45a3-a6ae-9546248fb17a",
 		"paths": "noble-vixen.fast-watchmen.full-weapon-x"
