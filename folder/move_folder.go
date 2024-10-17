@@ -30,6 +30,8 @@ func (f *driver) MoveFolder(name string, dst string) ([]Folder, error) {
 			dstPath = f.Paths
 		}
 	}
+
+	// Error Handling
 	if !sourceExists {
 		return nil, fmt.Errorf("error: source folder does not exist")
 	} else if !dstExists {
@@ -50,14 +52,14 @@ func (f *driver) MoveFolder(name string, dst string) ([]Folder, error) {
 		}
 	}
 
-	// If the source is before the dst in the dst path
 	if sourceIndex != -1 {
+		// If the source is before the dst in the dst path
 		if (sourceIndex < dstIndex) {
 			return nil, fmt.Errorf("error: cannot move a folder to a child of itself")
 		}
 	}
 
-	// Changing the path string
+	// Changing the path string and appending to new Folder array
 	res := []Folder{}
     for _, f := range folders { 
         if f.OrgId == sourceOrgId && strings.Contains(f.Paths, name) {
