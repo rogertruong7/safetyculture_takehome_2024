@@ -50,6 +50,7 @@ func (f *driver) MoveFolder(name string, dst string) ([]Folder, error) {
 		}
 	}
 
+	// If the source is before the dst in the dst path
 	if sourceIndex != -1 {
 		if (sourceIndex < dstIndex) {
 			return nil, fmt.Errorf("error: cannot move a folder to a child of itself")

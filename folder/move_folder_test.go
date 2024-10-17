@@ -79,7 +79,7 @@ func Test_folder_MoveFolder(t *testing.T) {
 		{
 			name:    "Valid move with similar named folders - no error",
 			source:  "csteady-insectc",
-			dst:     "asteady-insect",
+			dst:     "steady-insect",
 			folders: res, 
 			want:    extractData("./testOutputs/moveFolderSimilar.json"),
 			wantErr: false,
